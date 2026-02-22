@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://btinmfyx60e23"]
+
+[ext_resource type="PackedScene" uid="uid://cjfot5ycow6nb" path="res://player.tscn" id="1_mlf6e"]
+[ext_resource type="Script" uid="uid://bwslr08i3f05w" path="res://KillZone.cs" id="1_v1wow"]
+[ext_resource type="Script" uid="uid://lywbt8jqsque" path="res://Player.cs" id="2_po0ka"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_po0ka"]
+size = Vector3(200, 1, 200)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ulns0"]
+size = Vector3(10, 1, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dfy80"]
+size = Vector3(10, 1, 20)
+
+[node name="Main" type="Node"]
+
+[node name="KillZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+script = ExtResource("1_v1wow")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KillZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+shape = SubResource("BoxShape3D_po0ka")
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_ulns0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_dfy80")
+
+[node name="Player" parent="." groups=["player"] instance=ExtResource("1_mlf6e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("2_po0ka")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 93.3181, 95.6263, 0)
+
+[connection signal="body_entered" from="KillZone" to="KillZone" method="OnBodyEnered"]
