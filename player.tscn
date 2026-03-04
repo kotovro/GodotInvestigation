@@ -1,10 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjfot5ycow6nb"]
+[gd_scene load_steps=9 format=3 uid="uid://cjfot5ycow6nb"]
+
+[ext_resource type="Script" uid="uid://bamumdqlx3qgg" path="res://Scripts/StateMachine.cs" id="1_hqtel"]
+[ext_resource type="Script" uid="uid://lywbt8jqsque" path="res://Player.cs" id="1_sweqy"]
+[ext_resource type="Script" uid="uid://cp8jfb62tovbb" path="res://Scripts/IdleState.cs" id="2_sweqy"]
+[ext_resource type="Script" uid="uid://drf6tiqquh8fi" path="res://Scripts/WalkState.cs" id="3_2hs0m"]
+[ext_resource type="Script" uid="uid://b632xci3wxgaa" path="res://Scripts/JumpState.cs" id="4_1jxqw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_sh265"]
+size = Vector3(10, 0.5, 0.2)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_sh265"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
 [node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_sweqy")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_sh265")
+skeleton = NodePath("../MeshInstance3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_sh265")
@@ -13,5 +27,18 @@ mesh = SubResource("CapsuleMesh_sh265")
 shape = SubResource("CapsuleShape3D_4flbx")
 
 [node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 3, 4)
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("1_hqtel")
+
+[node name="IdleState" type="Node" parent="StateMachine"]
+script = ExtResource("2_sweqy")
+
+[node name="WalkState" type="Node" parent="StateMachine"]
+script = ExtResource("3_2hs0m")
+
+[node name="JumpState" type="Node" parent="StateMachine"]
+script = ExtResource("4_1jxqw")
