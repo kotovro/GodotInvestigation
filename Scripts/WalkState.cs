@@ -16,16 +16,16 @@ public partial class WalkState : State
 		{
 			TransitionTo("JumpState");
 		}
-	
-		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 
-		// Stop if no input
+
+		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
+		
 		if (inputDir == Vector2.Zero)
 		{
 			TransitionTo("IdleState");
 			return;
 		}
-		// Camera-relative movement
+	
 		
 
 

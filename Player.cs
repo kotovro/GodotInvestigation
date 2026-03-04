@@ -1,71 +1,95 @@
+// Player.cs
 using Godot;
-using System;
-using System.Threading;
 
 public partial class Player : CharacterBody3D, IEntity
 {
-	private float stamina = 0;
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
-	private Node3D _Head;
+	[Export] public float Gravity { get; set; } = 25f;
+	[Export] public float JumpVelocity { get; set; } = 7.0f;
 
-	// Interface property: wraps the built-in Velocity
+	// Coyote Time & Buffering Config
+	[Export] public float CoyoteTime { get; set; } = 0.1f;      // 100ms grace period
+	[Export] public float JumpBufferTime { get; set; } = 0.1f;  // 100ms input queue
+
+	private float _coyoteTimer = 0f;
+	private float _jumpBufferTimer = 0f;
+
+	private Node3D _Head;
+	private Camera3D _camera;
+
+	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
+
+	// ✅ IEntity Implementation
 	public new Vector3 Velocity
 	{
 		get => base.Velocity;
 		set => base.Velocity = value;
 	}
 
-	// Interface property: wraps the built-in IsOnFloor()
-	public new bool IsOnFloor => IsOnFloor();
+	public bool IsOnFloor => IsOnFloor();
 
-	//// Interface method: Hook for animations (optional for now)
-	//public void PlayAnimation(string name)
-	//{
-		//GD.Print($"[Player] PlayAnimation: {name}");
-	//}
+	// True if on ground OR still in coyote window
+	public bool CanJump => IsOnFloor || _coyoteTimer > 0;
 
-	// Interface method: Returns self as Node
+	public bool ConsumeJumpBuffer()
+	{
+		if (_jumpBufferTimer > 0)
+		{
+			_jumpBufferTimer = 0;
+			return true;
+		}
+		return false;
+	}
+
+	public void ResetJumpBuffer() => _jumpBufferTimer = 0;
+
+	public void PlayAnimation(string name)
+	{
+		if (HasNode("AnimationPlayer"))
+			GetNode<AnimationPlayer>("AnimationPlayer").Play(name);
+	}
+
 	public Node AsNode() => this;
+
 	public override void _Ready()
 	{
 		_Head = GetNode<Node3D>("Head");
+		if (HasNode(CameraPath))
+			_camera = GetNode<Camera3D>(CameraPath);
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		// 1. Let the StateMachine handle movement logic first
-		// The active state will modify 'Velocity' via the IEntity interface
-		if (HasNode("StateMachine"))
-		{
-			GetNode<StateMachine>("StateMachine")._PhysicsProcess(delta);
-		}
-		GD.Print($"Curresnt vekocity is:", Velocity.X);
+		// 1. Update Coyote Timer
+		if (IsOnFloor)
+			_coyoteTimer = CoyoteTime;
+		else if (_coyoteTimer > 0)
+			_coyoteTimer -= (float)delta;
 
-		// 2. Apply Gravity (Fallback)
-		// Note: If your JumpState handles gravity, you might skip this, 
-		// but keeping it ensures the player falls if no state does.
+		// 2. Update Jump Buffer Timer
+		if (Input.IsActionJustPressed("ui_accept"))
+			_jumpBufferTimer = JumpBufferTime;
+		else if (_jumpBufferTimer > 0)
+			_jumpBufferTimer -= (float)delta;
+
+		// 3. Let StateMachine handle movement logic
+		GetNodeOrNull<StateMachine>("StateMachine")?._PhysicsProcess(delta);
+
+		// 4. Apply Gravity (Use heavier gravity for falling for snappier feel)
 		if (!IsOnFloor)
 		{
-			Velocity += GetGravity() * (float)delta;
+			float currentGravity = (Velocity.Y < 0) ? Gravity * 1.5f : Gravity;
+			Velocity += Vector3.Down * currentGravity * (float)delta;
 		}
 
-		// 3. Move the character (Godot's built-in physics)
 		MoveAndSlide();
 	}
-	
+
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (@event is InputEventMouseMotion mouseMotion)
 		{
-			this.RotateY(mouseMotion.Relative.X * 0.01f);
+			RotateY(mouseMotion.Relative.X * 0.01f);
 			_Head.RotateX(-mouseMotion.Relative.Y * 0.01f);
 		}
-	}
-	
-	private void Die()
-	{	
-		//Emit signal to retser the game or smt
-		QueueFree();
 	}
 }

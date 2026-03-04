@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bwslr08i3f05w" path="res://KillZone.cs" id="1_v1wow"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_po0ka"]
-size = Vector3(200, 1, 200)
+size = Vector3(1819.71, 1, 988.492)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ulns0"]
 size = Vector3(10, 1, 20)
@@ -19,7 +19,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
 script = ExtResource("1_v1wow")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="KillZone"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -599.178, -10, 224.122)
 shape = SubResource("BoxShape3D_po0ka")
 
 [node name="Ground" type="StaticBody3D" parent="."]

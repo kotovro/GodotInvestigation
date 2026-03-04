@@ -1,17 +1,27 @@
+// JumpState.cs
 using Godot;
 
 public partial class JumpState : State
 {
-	[Export] public float Speed { get; set; } = 5.0f;
-	[Export] public float JumpVelocity { get; set; } = 5.0f;
-	[Export] public float AirControl { get; set; } = 0.3f; // 0 = no control, 1 = full control
-	[Export] public float AirAcceleration { get; set; } = 10f;
+	[Export] public float JumpVelocity { get; set; } = 7.0f;
+	[Export] public float AirControl { get; set; } = 0.3f;       // 0.0-1.0 steering authority
+	[Export] public float AirAcceleration { get; set; } = 15f;   // How fast steering kicks in
+	[Export] public float VariableJumpCut { get; set; } = 0.5f;  // Velocity multiplier on early release
+
 
 	public override void Enter()
 	{
-		GD.Print("We entereded jump state");
-		// Set Y velocity only, keep X/Z momentum
-		Entity.Velocity = new Vector3(Entity.Velocity.X, JumpVelocity, Entity.Velocity.Z);
+
+		// Apply initial jump impulse
+		Entity.Velocity = new Vector3(JumpVelocity, JumpVelocity, JumpVelocity);
+
+	}
+
+	public override void Exit()
+	{
+		// Reset buffer when leaving jump state
+		if (Entity.AsNode() is Player player)
+			player.ResetJumpBuffer();
 	}
 
 
@@ -19,19 +29,16 @@ public partial class JumpState : State
 	{
 		Vector2 inputDir = Input.GetVector("forward", "back", "left", "right");
 
-
-		if (!Input.IsActionPressed("jump") && Entity.Velocity.Y < 0)
-		{
-			Entity.Velocity = new Vector3(Entity.Velocity.X, Entity.Velocity.Y * 0.9f, Entity.Velocity.Z);
-		}
+		Vector3 direction = new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
+		Entity.Velocity = new Vector3(direction.X * 10, Entity.Velocity.Y, direction.Z * 10);
 
 		if (Entity.IsOnFloor)
 		{
+
 			if (inputDir.Length() > 0.1f)
 				TransitionTo("WalkState");
 			else
 				TransitionTo("IdleState");
 		}
 	}
-
 }
