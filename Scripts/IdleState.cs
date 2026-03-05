@@ -11,7 +11,7 @@ public partial class IdleState : State
 
 	public override void PhysicsUpdate(double delta)
 	{
-		if (Input.IsActionPressed("jump") && Entity.IsOnFloor)
+		if (Input.IsActionPressed("jump") && Entity.IsTouchingFloor)
 		{
 			TransitionTo("JumpState");
 		}

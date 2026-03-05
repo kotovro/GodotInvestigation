@@ -3,6 +3,11 @@ using Godot;
 
 public partial class Player : CharacterBody3D, IEntity
 {
+
+	[Signal] public delegate void LeftGroundEventHandler();
+	[Signal] public delegate void LandedEventHandler();
+
+	private bool _wasOnFloor;
 	[Export] public float Gravity { get; set; } = 25f;
 	[Export] public float JumpVelocity { get; set; } = 7.0f;
 
@@ -18,17 +23,15 @@ public partial class Player : CharacterBody3D, IEntity
 
 	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
 
-	// ✅ IEntity Implementation
 	public new Vector3 Velocity
 	{
 		get => base.Velocity;
 		set => base.Velocity = value;
 	}
 
-	public bool IsOnFloor => IsOnFloor();
-
+	public bool IsTouchingFloor => IsOnFloor();
 	// True if on ground OR still in coyote window
-	public bool CanJump => IsOnFloor || _coyoteTimer > 0;
+	public bool CanJump => IsTouchingFloor || _coyoteTimer > 0;
 
 	public bool ConsumeJumpBuffer()
 	{
@@ -59,27 +62,22 @@ public partial class Player : CharacterBody3D, IEntity
 
 	public override void _PhysicsProcess(double delta)
 	{
-		// 1. Update Coyote Timer
-		if (IsOnFloor)
-			_coyoteTimer = CoyoteTime;
-		else if (_coyoteTimer > 0)
-			_coyoteTimer -= (float)delta;
-
-		// 2. Update Jump Buffer Timer
-		if (Input.IsActionJustPressed("ui_accept"))
-			_jumpBufferTimer = JumpBufferTime;
-		else if (_jumpBufferTimer > 0)
-			_jumpBufferTimer -= (float)delta;
-
+		
 		// 3. Let StateMachine handle movement logic
 		GetNodeOrNull<StateMachine>("StateMachine")?._PhysicsProcess(delta);
 
-		// 4. Apply Gravity (Use heavier gravity for falling for snappier feel)
-		if (!IsOnFloor)
-		{
-			float currentGravity = (Velocity.Y < 0) ? Gravity * 1.5f : Gravity;
-			Velocity += Vector3.Down * currentGravity * (float)delta;
-		}
+		bool onFloor = IsOnFloor();
+
+		if (_wasOnFloor && !onFloor)
+			EmitSignal(SignalName.LeftGround);
+
+		if (!_wasOnFloor && onFloor)
+			EmitSignal(SignalName.Landed);
+
+		_wasOnFloor = onFloor;
+		
+		if (!onFloor)
+			Velocity += Vector3.Down * Gravity * (float)delta;
 
 		MoveAndSlide();
 	}

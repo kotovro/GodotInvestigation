@@ -1,4 +1,5 @@
 using Godot;
+using static Godot.TextServer;
 
 public partial class WalkState : State
 {
@@ -11,30 +12,23 @@ public partial class WalkState : State
 
 
 	public override void PhysicsUpdate(double delta)
-	{	
-		if (Input.IsActionPressed("jump") && Entity.IsOnFloor)
+	{
+		GD.Print($"Toucjing flooe", Input.IsActionPressed("jump") && Entity.IsTouchingFloor);
+		if (Input.IsActionPressed("jump") && Entity.IsTouchingFloor)
 		{
 			TransitionTo("JumpState");
 		}
-
-
-		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		
+		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		if (inputDir == Vector2.Zero)
 		{
 			TransitionTo("IdleState");
 			return;
 		}
-	
-		
-
-
-		// Convert 2D input to 3D direction (Y is 0)
-		Vector3 direction = new Vector3(inputDir.X, 0, inputDir.Y).Normalized();
-
-		// Apply velocity
-		Entity.Velocity = new Vector3(direction.X * Speed, Entity.Velocity.Y, direction.Z * Speed);
-
+		Vector3 velocity = Entity.Velocity;
+		velocity.X = inputDir.X * Speed;
+		velocity.Z = inputDir.Y * Speed;
+		Entity.Velocity = velocity;
 		//// Rotate player to face direction
 		//if (Entity.AsNode() is Player player)
 		//{
