@@ -15,9 +15,6 @@ public partial class Player : CharacterBody3D, IEntity
 	[Export] public float CoyoteTime { get; set; } = 0.1f;      // 100ms grace period
 	[Export] public float JumpBufferTime { get; set; } = 0.1f;  // 100ms input queue
 
-	private float _coyoteTimer = 0f;
-	private float _jumpBufferTimer = 0f;
-
 	private Node3D _Head;
 	private Camera3D _camera;
 
@@ -31,20 +28,9 @@ public partial class Player : CharacterBody3D, IEntity
 
 	public bool IsTouchingFloor => IsOnFloor();
 	// True if on ground OR still in coyote window
-	public bool CanJump => IsTouchingFloor || _coyoteTimer > 0;
+	public bool CanJump => IsTouchingFloor || GetNode<CoyoteComponent>("CoyoteComponent").IsActive;
 
-	public bool ConsumeJumpBuffer()
-	{
-		if (_jumpBufferTimer > 0)
-		{
-			_jumpBufferTimer = 0;
-			return true;
-		}
-		return false;
-	}
-
-	public void ResetJumpBuffer() => _jumpBufferTimer = 0;
-
+	
 	public void PlayAnimation(string name)
 	{
 		if (HasNode("AnimationPlayer"))

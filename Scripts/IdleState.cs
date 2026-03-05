@@ -12,8 +12,10 @@ public partial class IdleState : State
 	public override void PhysicsUpdate(double delta)
 	{
 
-		if (Input.IsActionPressed("jump") && Entity.IsTouchingFloor || GetNodeOrNull<CoyoteComponent>("../../CoyoteComponent").IsActive)
+		if (Input.IsActionJustPressed("jump") && Entity.CanJump)
 		{
+			
+			GD.Print($"We jumped!", Entity.CanJump);
 			TransitionTo("JumpState");
 		}
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
