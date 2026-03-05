@@ -62,10 +62,18 @@ public partial class Player : CharacterBody3D, IEntity
 
 	public override void _PhysicsProcess(double delta)
 	{
-		
-		// 3. Let StateMachine handle movement logic
+
+		// 1. State logic (if needed)
 		GetNodeOrNull<StateMachine>("StateMachine")?._PhysicsProcess(delta);
 
+		// 2. Apply gravity BEFORE move
+		if (!IsOnFloor())
+			Velocity += Vector3.Down * Gravity * (float)delta;
+
+		// 3. Move physics body
+		MoveAndSlide();
+
+		// 4. Now check floor AFTER movement
 		bool onFloor = IsOnFloor();
 
 		if (_wasOnFloor && !onFloor)
@@ -75,11 +83,6 @@ public partial class Player : CharacterBody3D, IEntity
 			EmitSignal(SignalName.Landed);
 
 		_wasOnFloor = onFloor;
-		
-		if (!onFloor)
-			Velocity += Vector3.Down * Gravity * (float)delta;
-
-		MoveAndSlide();
 	}
 
 	public override void _UnhandledInput(InputEvent @event)

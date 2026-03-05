@@ -7,14 +7,12 @@ public partial class WalkState : State
 
 	public override void Enter()
 	{
-		GD.Print("We entered walk state");
 	}
 
 
 	public override void PhysicsUpdate(double delta)
 	{
-		GD.Print($"Toucjing flooe", Input.IsActionPressed("jump") && Entity.IsTouchingFloor);
-		if (Input.IsActionPressed("jump") && Entity.IsTouchingFloor)
+		if (Input.IsActionJustPressed("jump") && Entity.IsTouchingFloor || GetNodeOrNull<CoyoteComponent>("../../CoyoteComponent").IsActive)
 		{
 			TransitionTo("JumpState");
 		}

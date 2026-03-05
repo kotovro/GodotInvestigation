@@ -25,6 +25,7 @@ public partial class CoyoteComponent : Node
 
 	private void OnLeftGround()
 	{
+		GD.Print("Left ground");
 		_active = true;
 		_timer.Start();
 	}

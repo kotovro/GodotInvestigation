@@ -24,7 +24,6 @@ public abstract partial class State : Node
     // Request a transition to another state
     protected void TransitionTo(string nextStatePath)
     {
-        GD.Print("sifnal emotted!");
         EmitSignal(SignalName.Finished, nextStatePath);
     }
 }
