@@ -1,5 +1,4 @@
 using Godot;
-using static Godot.TextServer;
 
 public partial class WalkState : State
 {
@@ -28,12 +27,5 @@ public partial class WalkState : State
 		velocity.X = inputDir.X * Speed;
 		velocity.Z = inputDir.Y * Speed;
 		Entity.Velocity = velocity;
-		//// Rotate player to face direction
-		//if (Entity.AsNode() is Player player)
-		//{
-		//    player.LookDirection(direction);
-		//}
-
-		//Entity.PlayAnimation("walk");
 	}
 }
