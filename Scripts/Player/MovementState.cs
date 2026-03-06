@@ -1,5 +1,4 @@
 using Godot;
-using System.Security.Cryptography.X509Certificates;
 public abstract partial class MovementState : State
 {
     public virtual MovementMode MovementMode => MovementMode.Idle;
@@ -14,6 +13,4 @@ public abstract partial class MovementState : State
         base.Initialize(entity);
         Stamina = stamina;
     }
-
-    public virtual bool CanEnter() => true;
 }

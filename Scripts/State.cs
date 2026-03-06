@@ -2,6 +2,8 @@ using Godot;
 
 public abstract partial class State : Node
 {
+
+
 	[Signal]
 	public delegate void FinishedEventHandler(string nextStatePath);
 
@@ -17,9 +19,11 @@ public abstract partial class State : Node
 	public virtual void HandleInput(InputEvent @event) { }
 	public virtual void Update(double delta) { }
 	public virtual void PhysicsUpdate(double delta) { }
+    public virtual bool CanEnter() => true;
 
-	protected void TransitionTo(string nextStatePath)
+    protected void TransitionTo(string nextStatePath)
 	{
 		EmitSignal(SignalName.Finished, nextStatePath);
 	}
+
 }

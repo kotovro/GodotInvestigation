@@ -18,7 +18,7 @@ public partial class CoyoteComponent : Node
 
 		_timer.Timeout += OnTimeout;
 
-		var player = GetParent<Player>();
+		var player = GetParent<PlayerController>();
 		player.LeftGround += OnLeftGround;
 		player.Landed += OnLanded;
 	}

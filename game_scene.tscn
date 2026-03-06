@@ -1,5 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://btinmfyx60e23"]
+[gd_scene load_steps=8 format=3 uid="uid://btinmfyx60e23"]
 
+[ext_resource type="Script" uid="uid://bdnk8rd6mfy6y" path="res://GameStateController.cs" id="1_mixcd"]
+[ext_resource type="PackedScene" uid="uid://dm4r0uyj05qy" path="res://enemy_spawner.tscn" id="1_mj2jn"]
 [ext_resource type="PackedScene" uid="uid://cjfot5ycow6nb" path="res://player.tscn" id="1_mlf6e"]
 [ext_resource type="Script" uid="uid://bwslr08i3f05w" path="res://KillZone.cs" id="1_v1wow"]
 
@@ -7,7 +9,7 @@
 size = Vector3(1819.71, 1, 988.492)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ulns0"]
-size = Vector3(10, 1, 20)
+size = Vector3(100, 1, 1000)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dfy80"]
 size = Vector3(10, 1, 20)
@@ -15,6 +17,8 @@ size = Vector3(10, 1, 20)
 [node name="Main" type="Node"]
 
 [node name="GameStateController" type="Node" parent="."]
+script = ExtResource("1_mixcd")
+EnemySpawnerScene = ExtResource("1_mj2jn")
 
 [node name="KillZone" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)

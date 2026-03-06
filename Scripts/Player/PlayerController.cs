@@ -1,14 +1,13 @@
 // Player.cs
 using Godot;
 
-public partial class PlayerControoler : CharacterBody3D, IEntity
+public partial class PlayerController : CharacterBody3D, IEntity
 {
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
 
 	private bool _wasOnFloor;
 	[Export] public float Gravity { get; set; } = 25f;
-	[Export] public float JumpVelocity { get; set; } = 7.0f;
 
 	private CoyoteComponent _CoyoteTimer;
 	private StateMachine _StateMachine;

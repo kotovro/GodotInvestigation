@@ -1,20 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://ft4qvplanyck"]
+[gd_scene load_steps=6 format=3 uid="uid://ft4qvplanyck"]
 
 [ext_resource type="PackedScene" uid="uid://c0q16m6rdem" path="res://Pyramid.glb" id="1_6inb8"]
-[ext_resource type="Script" uid="uid://cadgene6dlbiy" path="res://Hostilepyramid.cs" id="1_rtua2"]
+[ext_resource type="Script" uid="uid://bxi5tv735pu2b" path="res://Scripts/Enemy/EnemyControlller.cs" id="1_p7icr"]
+[ext_resource type="Script" uid="uid://brposiqe5s2wj" path="res://Scripts/Enemy/EnemyStateMachine.cs" id="3_p7icr"]
+[ext_resource type="Script" uid="uid://dh7qwnt2fofho" path="res://Scripts/Enemy/WalkStateEnemy.cs" id="4_pawe4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rtua2"]
-size = Vector3(2.0235, 2.50146, 1)
+size = Vector3(4.25833, 5.27234, 8.86755)
 
 [node name="enemyobject" type="CharacterBody3D"]
-script = ExtResource("1_rtua2")
+script = ExtResource("1_p7icr")
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Pivot" type="Node3D" parent="."]
 
-[node name="Pyramid" parent="Node3D" instance=ExtResource("1_6inb8")]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Pyramid" parent="Pivot" instance=ExtResource("1_6inb8")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0198084, -0.706784, 0.00516033)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.09761, -2.09222, -1.68313)
 shape = SubResource("BoxShape3D_rtua2")
+
+[node name="EnemyStateMachine" type="Node" parent="."]
+script = ExtResource("3_p7icr")
+
+[node name="WalkState" type="Node" parent="EnemyStateMachine"]
+script = ExtResource("4_pawe4")
+
+[node name="IdleState" type="Node" parent="EnemyStateMachine"]

@@ -7,15 +7,11 @@ public partial class StateMachine : Node
 
 	public MovementMode _currentMovementMode { get; private set;  }
 	public MovementState CurrentState;
-	private IEntity _entity;
 
 	public override void _Ready()
 	{
-		_entity = GetParent() as IEntity  ?? 
+		var entity = GetParent() as IEntity  ?? 
 			throw new System.Exception("StateMachine must be child of IEntity");
-
-		GD.Print(_entity.GetType());
-
 		StaminaComponent staminaComponent = GetNode<StaminaComponent>("../StaminaComponent");
 		GD.Print($"StamionaComponent is null: ", staminaComponent == null);
 		foreach (var child in GetChildren())
@@ -23,9 +19,10 @@ public partial class StateMachine : Node
 			if (child is MovementState state)
 			{
 				state.Finished += OnStateFinished;
-				state.Initialize(_entity, staminaComponent);
+				state.Initialize(entity, staminaComponent);
 			}
 		}
+
 		CurrentState = InitialState ?? GetChild(0) as MovementState;
 		_currentMovementMode = CurrentState.MovementMode;
 		CurrentState.Enter();
