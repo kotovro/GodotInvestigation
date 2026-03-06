@@ -1,15 +1,24 @@
 using Godot;
-using static Godot.TextServer;
+using System;
 
-public partial class WalkState : MovementState
+public partial class RunState : MovementState
 {
-	public override MovementMode MovementMode => MovementMode.Walk;
-	public override float StaminaRegenPerSecond => 10f;
-	[Export] public float Speed { get; set; } = 5.0f;
+	public override MovementMode MovementMode => MovementMode.Run;
+
+	public override float StaminaConsumptionPerSecond => 10f;
+
+
+	[Export] public float Speed { get; set; } = 50.0f;
 
 	public override void Enter()
 	{
+		Vector3 velocity = Entity.Velocity;
+
+		velocity.X = Speed * 10;
+
+		Entity.Velocity = velocity;
 	}
+
 
 
 	public override void PhysicsUpdate(double delta)
@@ -20,17 +29,20 @@ public partial class WalkState : MovementState
 			TransitionTo("JumpState");
 		}
 
-		if (Input.IsActionPressed("run") && Input.IsActionPressed("forward") && CanEnter())
-		{
-			TransitionTo("RunState");
-		}
-		
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
+
+		
 		if (inputDir == Vector2.Zero)
 		{
 			TransitionTo("IdleState");
 			return;
 		}
+
+		if (!CanEnter())
+		{
+			TransitionTo("WalkState");
+		}
+
 		Stamina.Regenerate(StaminaRegenPerSecond);
 		Vector3 velocity = Entity.Velocity;
 		velocity.X = inputDir.X * Speed;
@@ -43,5 +55,10 @@ public partial class WalkState : MovementState
 		//}
 
 		//Entity.PlayAnimation("walk");
+	}
+	public override bool CanEnter()
+	{
+		GD.Print($"We know have stima:", Stamina.TryConsume(StaminaConsumptionPerSecond));
+		return Stamina.TryConsume(StaminaConsumptionPerSecond);
 	}
 }
