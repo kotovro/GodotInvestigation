@@ -3,9 +3,10 @@ using System;
 
 public partial class StateMachine : Node
 {
-	[Export] public State InitialState { get; set; }
+	[Export] public MovementState  InitialState { get; set; }
 
-	private State _currentState;
+	public MovementMode _currentMovementMode { get; private set;  }
+	public MovementState CurrentState;
 	private IEntity _entity;
 
 	public override void _Ready()
@@ -15,42 +16,50 @@ public partial class StateMachine : Node
 
 		GD.Print(_entity.GetType());
 
+		StaminaComponent staminaComponent = GetNode<StaminaComponent>("../StaminaComponent");
+		GD.Print($"StamionaComponent is null: ", staminaComponent == null);
 		foreach (var child in GetChildren())
 		{
-			if (child is State state)
+			if (child is MovementState state)
 			{
 				state.Finished += OnStateFinished;
-				state.Initialize(_entity);
+				state.Initialize(_entity, staminaComponent);
 			}
 		}
-
-		_currentState = InitialState ?? GetChild(0) as State;
-		_currentState.Enter();
+		CurrentState = InitialState ?? GetChild(0) as MovementState;
+		_currentMovementMode = CurrentState.MovementMode;
+		CurrentState.Enter();
+		
 	}
-
 
 	private void OnStateFinished(string nextStatePath)
 	{
-		var nextState = GetNodeOrNull<State>(nextStatePath);
-		GD.Print($"State finished:", _currentState.GetType());
+		var nextState = GetNodeOrNull<MovementState>(nextStatePath);
+		GD.Print($"State finished:", CurrentState.GetType());
 		if (nextState == null)
 		{
 			GD.PrintErr($"State not found: {nextStatePath}");
+			GD.Print("Current node:", GetPath());
+			GD.Print("Looking for:", nextStatePath);
 			return;
 		}
 
-		_currentState?.Exit();
-		_currentState = nextState;
-		_currentState.Enter();
+		if (!nextState.CanEnter())
+			return;
+
+		CurrentState?.Exit();
+		CurrentState = nextState;
+		_currentMovementMode = CurrentState.MovementMode;
+		CurrentState.Enter();
 	}
 
 	public override void _Process(double delta)
 	{
-		_currentState?.Update(delta);
+		CurrentState?.Update(delta);
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		_currentState?.PhysicsUpdate(delta);
+		CurrentState?.PhysicsUpdate(delta);
 	}
 }

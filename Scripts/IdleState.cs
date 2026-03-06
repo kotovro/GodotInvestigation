@@ -1,8 +1,10 @@
 using Godot;
 using System;
 
-public partial class IdleState : State
+public partial class IdleState : MovementState
 {
+	public override MovementMode MovementMode => MovementMode.Walk;
+	public override float StaminaRegenPerSecond => 10f;
 	[Export] public float Speed { get; set; } = 0.0f;
 	public override void Enter()
 	{
@@ -18,10 +20,17 @@ public partial class IdleState : State
 			GD.Print($"We jumped!", Entity.CanJump);
 			TransitionTo("JumpState");
 		}
+		Stamina.Regenerate(StaminaRegenPerSecond);
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		if (inputDir != Vector2.Zero)
 		{
 			TransitionTo("WalkState");
-		}   
+		}
+
+		if (Input.IsActionJustPressed("run"))
+		{
+			GD.Print($"We are running!", Entity.CanJump);
+			TransitionTo("RunState");
+		}
 	}
 }

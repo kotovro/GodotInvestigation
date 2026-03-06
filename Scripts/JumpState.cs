@@ -1,13 +1,12 @@
 // JumpState.cs
 using Godot;
 
-public partial class JumpState : State
+public partial class JumpState : MovementState
 {
 	[Export] public float JumpVelocity { get; set; } = 7.0f;
-	[Export] public float AirControl { get; set; } = 0.3f;       // 0.0-1.0 steering authority
-	[Export] public float AirAcceleration { get; set; } = 15f;   // How fast steering kicks in
-	[Export] public float VariableJumpCut { get; set; } = 0.5f;  // Velocity multiplier on early release
-
+	[Export] public float AirControl { get; set; } = 0.3f;
+	[Export] public float AirAcceleration { get; set; } = 15f;
+	[Export] public float VariableJumpCut { get; set; } = 0.5f;  
 
 	public override void Enter()
 	{

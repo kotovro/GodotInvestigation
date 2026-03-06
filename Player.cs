@@ -3,7 +3,6 @@ using Godot;
 
 public partial class Player : CharacterBody3D, IEntity
 {
-
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
 
@@ -11,9 +10,9 @@ public partial class Player : CharacterBody3D, IEntity
 	[Export] public float Gravity { get; set; } = 25f;
 	[Export] public float JumpVelocity { get; set; } = 7.0f;
 
-	// Coyote Time & Buffering Config
-	[Export] public float CoyoteTime { get; set; } = 0.1f;      // 100ms grace period
-	[Export] public float JumpBufferTime { get; set; } = 0.1f;  // 100ms input queue
+	private CoyoteComponent _CoyoteTimer;
+	private StateMachine _StateMachine;
+	public StaminaComponent StaminaComponent;
 
 	private Node3D _Head;
 	private Camera3D _camera;
@@ -28,7 +27,7 @@ public partial class Player : CharacterBody3D, IEntity
 
 	public bool IsTouchingFloor => IsOnFloor();
 	// True if on ground OR still in coyote window
-	public bool CanJump => IsTouchingFloor || GetNode<CoyoteComponent>("CoyoteComponent").IsActive;
+	public bool CanJump => IsTouchingFloor || _CoyoteTimer.IsActive;
 
 	
 	public void PlayAnimation(string name)
@@ -44,13 +43,19 @@ public partial class Player : CharacterBody3D, IEntity
 		_Head = GetNode<Node3D>("Head");
 		if (HasNode(CameraPath))
 			_camera = GetNode<Camera3D>(CameraPath);
+		_CoyoteTimer = GetNode<CoyoteComponent>("CoyoteComponent");
+		_StateMachine = GetNode<StateMachine>("StateMachine");
+		StaminaComponent = GetNode<StaminaComponent>("StaminaComponent");
+
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 
 		// 1. State logic (if needed)
-		GetNodeOrNull<StateMachine>("StateMachine")?._PhysicsProcess(delta);
+		_StateMachine._PhysicsProcess(delta);
+
+		StaminaComponent.Update((float)delta, _StateMachine.CurrentState);
 
 		// 2. Apply gravity BEFORE move
 		if (!IsOnFloor())
