@@ -23,6 +23,8 @@ public partial class RunState : MovementState
 
 	public override void PhysicsUpdate(double delta)
 	{
+
+
 		if (Input.IsActionJustPressed("jump") && Entity.CanJump)
 		{
 			GD.Print($"We jumped!", Entity.CanJump);
@@ -43,7 +45,7 @@ public partial class RunState : MovementState
 			TransitionTo("WalkState");
 		}
 
-		Stamina.Regenerate(StaminaRegenPerSecond);
+		Stamina.Consume(StaminaConsumptionPerSecond);
 		Vector3 velocity = Entity.Velocity;
 		velocity.X = inputDir.X * Speed;
 		velocity.Z = inputDir.Y * Speed;

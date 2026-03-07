@@ -38,6 +38,23 @@ public partial class EnemyControlller : CharacterBody3D, IEntity
 	{
 		throw new System.NotImplementedException();
 	}
+
+	public Vector3 GetMovementDirection(Vector2 input)
+	{
+		// Simple world-space for basic enemies
+		return new Vector3(input.X, 0, input.Y).Normalized();
+
+		// OR: AI-driven direction (ignore input entirely)
+		// return CalculateAIDirection();
+	}
+
+	public void SetLookDirection(Vector3 direction)
+	{
+		if (direction.Length() > 0.1f)
+		{
+			LookAt(GlobalTransform.Origin + direction, Vector3.Up);
+		}
+	}
 }
 
 //using Godot;

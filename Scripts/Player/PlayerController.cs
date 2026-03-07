@@ -1,4 +1,3 @@
-// Player.cs
 using Godot;
 
 public partial class PlayerController : CharacterBody3D, IEntity
@@ -47,6 +46,35 @@ public partial class PlayerController : CharacterBody3D, IEntity
 		StaminaComponent = GetNode<StaminaComponent>("StaminaComponent");
 
 	}
+
+	public Vector3 GetMovementDirection(Vector2 input)
+	{
+		if (_camera == null || input.Length() < 0.1f)
+			return Vector3.Zero;
+
+		Basis camBasis = _camera.GlobalTransform.Basis;
+		Vector3 camForward = -camBasis.Z; // Godot camera forward is -Z
+		Vector3 camRight = camBasis.X;
+
+		camForward.Y = 0;
+		camRight.Y = 0;
+
+		camForward = camForward.Normalized();
+		camRight = camRight.Normalized();
+
+
+		Vector3 direction = (camRight * input.X) + (camForward * -input.Y);
+
+		return direction.Normalized();
+	}
+	public void SetLookDirection(Vector3 direction)
+	{
+		if (direction.Length() > 0.1f)
+		{
+			LookAt(GlobalTransform.Origin + direction, Vector3.Up);
+		}
+	}
+
 
 	public override void _PhysicsProcess(double delta)
 	{

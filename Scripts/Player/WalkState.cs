@@ -1,4 +1,5 @@
 using Godot;
+using static Godot.TextServer;
 
 public partial class WalkState : MovementState
 {
@@ -23,17 +24,22 @@ public partial class WalkState : MovementState
 		{
 			TransitionTo("RunState");
 		}
-		
+
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		if (inputDir == Vector2.Zero)
 		{
 			TransitionTo("IdleState");
 			return;
 		}
-		Stamina.Regenerate(StaminaRegenPerSecond);
-		Vector3 velocity = Entity.Velocity;
-		velocity.X = inputDir.X * Speed;
-		velocity.Z = inputDir.Y * Speed;
-		Entity.Velocity = velocity;
+
+		Vector3 moveDirection = Entity.GetMovementDirection(inputDir);
+
+		Entity.Velocity = new Vector3(
+			moveDirection.X * Speed,
+			Entity.Velocity.Y,
+			moveDirection.Z * Speed
+		);
+
+		//Entity.SetLookDirection(moveDirection);
 	}
 }
