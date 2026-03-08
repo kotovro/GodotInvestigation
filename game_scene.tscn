@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://btinmfyx60e23"]
 
-[ext_resource type="Script" uid="uid://bdnk8rd6mfy6y" path="res://GameStateController.cs" id="1_mixcd"]
+[ext_resource type="Script" uid="uid://bdnk8rd6mfy6y" path="res://Scripts/GameStateController.cs" id="1_mixcd"]
 [ext_resource type="PackedScene" uid="uid://dm4r0uyj05qy" path="res://enemy_spawner.tscn" id="1_mj2jn"]
 [ext_resource type="PackedScene" uid="uid://cjfot5ycow6nb" path="res://player.tscn" id="1_mlf6e"]
 [ext_resource type="Script" uid="uid://bwslr08i3f05w" path="res://KillZone.cs" id="1_v1wow"]

@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://drf6tiqquh8fi" path="res://Scripts/Player/WalkState.cs" id="3_2hs0m"]
 [ext_resource type="Script" uid="uid://b632xci3wxgaa" path="res://Scripts/Player/JumpState.cs" id="4_1jxqw"]
 [ext_resource type="Script" uid="uid://uwc5v2vxd6uq" path="res://Scripts/Player/CoyoteComponent.cs" id="6_2hs0m"]
-[ext_resource type="Script" uid="uid://4p0lspsdoh5u" path="res://StaminaComponent.cs" id="7_1jxqw"]
+[ext_resource type="Script" uid="uid://4p0lspsdoh5u" path="res://Scripts/StaminaComponent.cs" id="7_1jxqw"]
 [ext_resource type="Script" uid="uid://ckoc0d6uvipxc" path="res://Scripts/Player/RunState.cs" id="8_dw050"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_sh265"]
