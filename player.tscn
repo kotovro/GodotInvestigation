@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://cjfot5ycow6nb"]
+[gd_scene load_steps=13 format=3 uid="uid://cjfot5ycow6nb"]
 
 [ext_resource type="Script" uid="uid://btftp7k2uq6eu" path="res://Scripts/Player/PlayerController.cs" id="1_dw050"]
 [ext_resource type="Script" uid="uid://bamumdqlx3qgg" path="res://Scripts/Player/StateMachine.cs" id="1_hqtel"]
 [ext_resource type="Script" uid="uid://cp8jfb62tovbb" path="res://Scripts/Player/IdleState.cs" id="2_sweqy"]
 [ext_resource type="Script" uid="uid://drf6tiqquh8fi" path="res://Scripts/Player/WalkState.cs" id="3_2hs0m"]
 [ext_resource type="Script" uid="uid://b632xci3wxgaa" path="res://Scripts/Player/JumpState.cs" id="4_1jxqw"]
+[ext_resource type="Script" uid="uid://rt2libpf5hi8" path="res://Scripts/HealthComponent.cs" id="4_b26j0"]
 [ext_resource type="Script" uid="uid://uwc5v2vxd6uq" path="res://Scripts/Player/CoyoteComponent.cs" id="6_2hs0m"]
 [ext_resource type="Script" uid="uid://4p0lspsdoh5u" path="res://Scripts/StaminaComponent.cs" id="7_1jxqw"]
 [ext_resource type="Script" uid="uid://ckoc0d6uvipxc" path="res://Scripts/Player/RunState.cs" id="8_dw050"]
@@ -39,6 +40,9 @@ script = ExtResource("7_1jxqw")
 
 [node name="CoyoteComponent" type="Node" parent="."]
 script = ExtResource("6_2hs0m")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("4_b26j0")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("1_hqtel")

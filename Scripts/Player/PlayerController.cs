@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerController : CharacterBody3D, IEntity
+public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 {
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
@@ -8,11 +8,13 @@ public partial class PlayerController : CharacterBody3D, IEntity
 	private bool _wasOnFloor;
 	[Export] public float Gravity { get; set; } = 25f;
 
-	private CoyoteComponent _CoyoteTimer;
-	private StateMachine _StateMachine;
-	public StaminaComponent StaminaComponent;
+	private StateMachine _stateMachine;
+    private HealthComponent _health;
+    public StaminaComponent staminaComponent { get; private set; }
+    private CoyoteComponent _coyoteTimer;
 
-	private Node3D _Head;
+
+    private Node3D _Head;
 	private Camera3D _camera;
 
 	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
@@ -25,25 +27,41 @@ public partial class PlayerController : CharacterBody3D, IEntity
 
 	public bool IsTouchingFloor => IsOnFloor();
 	// True if on ground OR still in coyote window
-	public bool CanJump => IsTouchingFloor || _CoyoteTimer.IsActive;
+	public bool CanJump => IsTouchingFloor || _coyoteTimer.IsActive;
+    public Node AsNode() => this;
 
-	
-	public void PlayAnimation(string name)
+    public float CurrentHealth => _health?.CurrentHealth ?? 0;
+    public float MaxHealth => _health?.MaxHealth ?? 100;
+    public bool IsAlive => _health?.IsAlive ?? true;
+
+    public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
+    {
+        _health?.TakeDamage(amount, hitDirection, damageSource);
+    }
+
+    public void Heal(float amount) => _health?.Heal(amount);
+
+    public void Die()
+    {
+        GD.Print("[Enemy] Died!");
+        // Drop loot, play death animation, etc.
+        QueueFree();
+    }
+    public void PlayAnimation(string name)
 	{
 		if (HasNode("AnimationPlayer"))
 			GetNode<AnimationPlayer>("AnimationPlayer").Play(name);
 	}
 
-	public Node AsNode() => this;
-
+	
 	public override void _Ready()
 	{
 		_Head = GetNode<Node3D>("Head");
 		if (HasNode(CameraPath))
 			_camera = GetNode<Camera3D>(CameraPath);
-		_CoyoteTimer = GetNode<CoyoteComponent>("CoyoteComponent");
-		_StateMachine = GetNode<StateMachine>("StateMachine");
-		StaminaComponent = GetNode<StaminaComponent>("StaminaComponent");
+		_coyoteTimer = GetNode<CoyoteComponent>("CoyoteComponent");
+		_stateMachine = GetNode<StateMachine>("StateMachine");
+		staminaComponent = GetNode<StaminaComponent>("StaminaComponent");
 
 	}
 
@@ -80,9 +98,9 @@ public partial class PlayerController : CharacterBody3D, IEntity
 	{
 
 		// 1. State logic (if needed)
-		_StateMachine._PhysicsProcess(delta);
+		_stateMachine._PhysicsProcess(delta);
 
-		StaminaComponent.Update((float)delta, _StateMachine.CurrentState);
+		staminaComponent.Update((float)delta, _stateMachine.CurrentState);
 
 		// 2. Apply gravity BEFORE move
 		if (!IsOnFloor())
