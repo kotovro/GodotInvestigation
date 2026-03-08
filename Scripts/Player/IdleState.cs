@@ -20,7 +20,8 @@ public partial class IdleState : MovementState
 			GD.Print($"We jumped!", Entity.CanJump);
 			TransitionTo("JumpState");
 		}
-		Stamina.Regenerate(StaminaRegenPerSecond);
+		var _entityAsStamina = (IStamina)Entity;
+        _entityAsStamina.Regenerate(StaminaRegenPerSecond);
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		if (inputDir != Vector2.Zero)
 		{

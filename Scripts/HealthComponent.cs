@@ -2,12 +2,8 @@ using Godot;
 
 public partial class HealthComponent : Node
 {
-	[Signal]
-	public delegate void HealthChangedEventHandler(float current, float max);
-
-	[Signal]
-	public delegate void DiedEventHandler();
-
+	[Signal] public delegate void HealthChangedEventHandler(float current, float max);
+	[Signal] public delegate void DiedEventHandler();
 	[Export] public float MaxHealth { get; set; } = 100f;
 	[Export] public float KnockbackForce { get; set; } = 10f;
 

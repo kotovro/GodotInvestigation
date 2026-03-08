@@ -4,8 +4,7 @@ public abstract partial class State : Node
 {
 
 
-	[Signal]
-	public delegate void FinishedEventHandler(string nextStatePath);
+	[Signal] public delegate void FinishedEventHandler(string nextStatePath);
 
 	protected IEntity Entity { get; set; }
 

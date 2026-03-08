@@ -19,7 +19,7 @@ public partial class StateMachine : Node
 			if (child is MovementState state)
 			{
 				state.Finished += OnStateFinished;
-				state.Initialize(entity, staminaComponent);
+				state.Initialize(entity);
 			}
 		}
 

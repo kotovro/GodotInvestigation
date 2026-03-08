@@ -1,5 +1,4 @@
 using Godot;
-using static Godot.TextServer;
 
 public partial class WalkState : MovementState
 {

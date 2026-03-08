@@ -9,10 +9,10 @@
 size = Vector3(1819.71, 1, 988.492)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ulns0"]
-size = Vector3(10, 1, 10)
+size = Vector3(40, 1, 40)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dfy80"]
-size = Vector3(10, 1, 10)
+size = Vector3(40, 1, 40)
 
 [node name="Main" type="Node"]
 
@@ -41,5 +41,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97.0726, 108.248, -91.9402)
+
+[node name="StaminaBar" type="CanvasLayer" parent="."]
+
+[node name="StaminaContainer" type="Control" parent="StaminaBar"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="StaminaFill" type="TextureProgressBar" parent="StaminaBar/StaminaContainer"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [connection signal="body_entered" from="KillZone" to="KillZone" method="OnBodyEnered"]

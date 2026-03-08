@@ -8,15 +8,18 @@ public partial class RunState : MovementState
 	public override float StaminaConsumptionPerSecond => 10f;
 
 
-	[Export] public float Speed { get; set; } = 50.0f;
+	[Export] public float Speed { get; set; } = 10.0f;
 
 	public override void Enter()
 	{
-		Vector3 velocity = Entity.Velocity;
+		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
+		Vector3 moveDirection = Entity.GetMovementDirection(inputDir);
 
-		velocity.X = Speed * 10;
-
-		Entity.Velocity = velocity;
+		Entity.Velocity = new Vector3(
+			moveDirection.X * Speed,
+			Entity.Velocity.Y,
+			moveDirection.Z * Speed
+		);
 	}
 
 
@@ -45,11 +48,18 @@ public partial class RunState : MovementState
 			TransitionTo("WalkState");
 		}
 
-		Stamina.Consume(StaminaConsumptionPerSecond);
-		Vector3 velocity = Entity.Velocity;
-		velocity.X = inputDir.X * Speed;
-		velocity.Z = inputDir.Y * Speed;
-		Entity.Velocity = velocity;
+		if (Entity is IStamina)
+		{
+			var _entityAsStamina = (IStamina)Entity;
+			_entityAsStamina.CanConsume(StaminaConsumptionPerSecond);
+		}
+		Vector3 moveDirection = Entity.GetMovementDirection(inputDir);
+
+		Entity.Velocity = new Vector3(
+			moveDirection.X * Speed,
+			Entity.Velocity.Y,
+			moveDirection.Z * Speed
+		);
 		//// Rotate player to face direction
 		//if (Entity.AsNode() is Player player)
 		//{
@@ -60,7 +70,8 @@ public partial class RunState : MovementState
 	}
 	public override bool CanEnter()
 	{
-		GD.Print($"We know have stima:", Stamina.TryConsume(StaminaConsumptionPerSecond));
-		return Stamina.TryConsume(StaminaConsumptionPerSecond);
+		var _entityAsStamina = (IStamina)Entity;
+		GD.Print($"We know have stima:", _entityAsStamina.CanConsume(StaminaConsumptionPerSecond));
+		return _entityAsStamina.CanConsume(StaminaConsumptionPerSecond);
 	}
 }

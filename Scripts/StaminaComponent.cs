@@ -3,38 +3,35 @@ using System;
 
 public partial class StaminaComponent : Node
 {
+
+	[Signal] public delegate void StaminaConsumedEventHandler(float consumedStamina);
+    [Signal] public delegate void StaminaRegenedEventHandler(float consumedStamina);
+    
 	[Export] public float MaxStamina = 100f;
 
-	public float CurrentStamina { get; private set; }
+    public float CurrentStamina { get; private set; }
 
 	public override void _Ready()
 	{
 		CurrentStamina = MaxStamina;
 	}
 
-	public void Update(float delta, MovementState movementState)
+	public void Update(float delta)
 	{
-		if (movementState == null)
-			return;
+		//if (movementState == null)
+		//	return;
 
-		if (movementState.StaminaConsumptionPerSecond > 0)
-		{
-			Consume(movementState.StaminaConsumptionPerSecond * delta);
-		}
-		else
-		{
-			Regenerate(movementState.StaminaRegenPerSecond * delta);
-		}
+		//if (movementState.StaminaConsumptionPerSecond > 0)
+		//{
+		//	Consume(movementState.StaminaConsumptionPerSecond * delta);
+		//}
+		//else
+		//{
+		//	Regenerate(movementState.StaminaRegenPerSecond * delta);
+		//}
 	}
 
-	public bool TryConsume(float amount)
-	{
-		if (CurrentStamina < amount)
-			return false;
-
-		CurrentStamina -= amount;
-		return true;
-	}
+    public bool CanConsume(float cost) => CurrentStamina >= cost;
 
 	public void Consume(float amount)
 	{
@@ -46,13 +43,7 @@ public partial class StaminaComponent : Node
 		CurrentStamina = Mathf.Min(CurrentStamina + amount, MaxStamina);
 	}
 
-	public void Restore(float amount)
-	{
-		CurrentStamina = Mathf.Min(CurrentStamina + amount, MaxStamina);
-	}
-
-	// Instant full refill
-	public void RestoreFull()
+	public void RegenerateFull()
 	{
 		CurrentStamina = MaxStamina;
 	}

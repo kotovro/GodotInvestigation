@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
+public partial class PlayerController : CharacterBody3D, IEntity, IStamina, IDamageable
 {
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
@@ -9,12 +9,12 @@ public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 	[Export] public float Gravity { get; set; } = 25f;
 
 	private StateMachine _stateMachine;
-    private HealthComponent _health;
-    public StaminaComponent staminaComponent { get; private set; }
-    private CoyoteComponent _coyoteTimer;
+	private HealthComponent _health;
+	public StaminaComponent _staminaComponent;
+	private CoyoteComponent _coyoteTimer;
 
 
-    private Node3D _Head;
+	private Node3D _Head;
 	private Camera3D _camera;
 
 	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
@@ -28,26 +28,34 @@ public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 	public bool IsTouchingFloor => IsOnFloor();
 	// True if on ground OR still in coyote window
 	public bool CanJump => IsTouchingFloor || _coyoteTimer.IsActive;
-    public Node AsNode() => this;
+	public Node AsNode() => this;
 
-    public float CurrentHealth => _health?.CurrentHealth ?? 0;
-    public float MaxHealth => _health?.MaxHealth ?? 100;
-    public bool IsAlive => _health?.IsAlive ?? true;
 
-    public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
-    {
-        _health?.TakeDamage(amount, hitDirection, damageSource);
-    }
 
-    public void Heal(float amount) => _health?.Heal(amount);
+	public float CurrentStamina => _staminaComponent?.CurrentStamina ?? 0;
+	public float MaxStamina => _staminaComponent?.MaxStamina ?? 100;
 
-    public void Die()
-    {
-        GD.Print("[Enemy] Died!");
-        // Drop loot, play death animation, etc.
-        QueueFree();
-    }
-    public void PlayAnimation(string name)
+	public bool CanConsume(float cost) => _staminaComponent?.CanConsume(cost) ?? true;
+	public void Regenerate(float amount) => _staminaComponent?.Regenerate(amount);
+
+	public float CurrentHealth => _health?.CurrentHealth ?? 0;
+	public float MaxHealth => _health?.MaxHealth ?? 100;
+	public bool IsAlive => _health?.IsAlive ?? true;
+
+	public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
+	{
+		_health?.TakeDamage(amount, hitDirection, damageSource);
+	}
+
+	public void Heal(float amount) => _health?.Heal(amount);
+
+	public void Die()
+	{
+		GD.Print("[Enemy] Died!");
+		// Drop loot, play death animation, etc.
+		QueueFree();
+	}
+	public void PlayAnimation(string name)
 	{
 		if (HasNode("AnimationPlayer"))
 			GetNode<AnimationPlayer>("AnimationPlayer").Play(name);
@@ -61,7 +69,7 @@ public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 			_camera = GetNode<Camera3D>(CameraPath);
 		_coyoteTimer = GetNode<CoyoteComponent>("CoyoteComponent");
 		_stateMachine = GetNode<StateMachine>("StateMachine");
-		staminaComponent = GetNode<StaminaComponent>("StaminaComponent");
+		_staminaComponent = GetNode<StaminaComponent>("StaminaComponent");
 
 	}
 
@@ -100,7 +108,7 @@ public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 		// 1. State logic (if needed)
 		_stateMachine._PhysicsProcess(delta);
 
-		staminaComponent.Update((float)delta, _stateMachine.CurrentState);
+		_staminaComponent.Update((float)delta);
 
 		// 2. Apply gravity BEFORE move
 		if (!IsOnFloor())
@@ -129,4 +137,5 @@ public partial class PlayerController : CharacterBody3D, IEntity, IDamageable
 			_Head.RotateX(-mouseMotion.Relative.Y * 0.01f);
 		}
 	}
+
 }
