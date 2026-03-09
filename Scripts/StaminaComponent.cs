@@ -36,6 +36,7 @@ public partial class StaminaComponent : Node
 	public void Consume(float amount)
 	{
 		CurrentStamina = Mathf.Max(CurrentStamina - amount, 0);
+		EmitSignal(SignalName.StaminaConsumed, amount);
 	}
 
 	public void Regenerate(float amount)

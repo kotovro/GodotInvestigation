@@ -35,7 +35,7 @@ transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 
-[node name="StaminaComponent" type="Node" parent="."]
+[node name="StaminaComponent" type="Node" parent="." groups=["stamina_source"]]
 script = ExtResource("7_1jxqw")
 
 [node name="CoyoteComponent" type="Node" parent="."]

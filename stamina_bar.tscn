@@ -1,4 +1,10 @@
-[gd_scene format=3 uid="uid://cejhbln13i3w0"]
+[gd_scene load_steps=3 format=3 uid="uid://cejhbln13i3w0"]
+
+[sub_resource type="SystemFont" id="SystemFont_qdpyq"]
+
+[sub_resource type="Theme" id="Theme_lq8vc"]
+default_font = SubResource("SystemFont_qdpyq")
+default_font_size = 12
 
 [node name="StaminaBar" type="CanvasLayer"]
 
@@ -7,3 +13,4 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = SubResource("Theme_lq8vc")
