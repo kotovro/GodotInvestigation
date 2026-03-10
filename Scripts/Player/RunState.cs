@@ -3,12 +3,10 @@ using System;
 
 public partial class RunState : MovementState
 {
-	public override MovementMode MovementMode => MovementMode.Run;
-
 	public override float StaminaConsumptionPerSecond => 10f;
 
 
-	[Export] public float Speed { get; set; } = 10.0f;
+	[Export] public float Speed { get; set; } = 40.0f;
 
 	public override void Enter()
 	{
@@ -48,11 +46,7 @@ public partial class RunState : MovementState
 			TransitionTo("WalkState");
 		}
 
-		if (Entity is IStamina)
-		{
-			var _entityAsStamina = (IStamina)Entity;
-			_entityAsStamina.CanConsume(StaminaConsumptionPerSecond);
-		}
+		_staminaComponent.TryConsume(StaminaConsumptionPerSecond);
 		Vector3 moveDirection = Entity.GetMovementDirection(inputDir);
 
 		Entity.Velocity = new Vector3(
@@ -70,8 +64,7 @@ public partial class RunState : MovementState
 	}
 	public override bool CanEnter()
 	{
-		var _entityAsStamina = (IStamina)Entity;
-		GD.Print($"We know have stima:", _entityAsStamina.CanConsume(StaminaConsumptionPerSecond));
-		return _entityAsStamina.CanConsume(StaminaConsumptionPerSecond);
+		GD.Print($"We know have stima:", _staminaComponent.CanConsume(StaminaConsumptionPerSecond));
+		return _staminaComponent.CanConsume(StaminaConsumptionPerSecond);
 	}
 }

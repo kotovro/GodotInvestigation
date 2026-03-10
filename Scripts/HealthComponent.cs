@@ -8,7 +8,7 @@ public partial class HealthComponent : Node
 	[Export] public float KnockbackForce { get; set; } = 10f;
 
 	private float _currentHealth;
-	private IDamageable _owner;
+
 
 	public float CurrentHealth => _currentHealth;
 	public bool IsAlive => _currentHealth > 0;
@@ -16,12 +16,6 @@ public partial class HealthComponent : Node
 	public override void _Ready()
 	{
 		_currentHealth = MaxHealth;
-		_owner = GetParent() as IDamageable;
-
-		if (_owner == null)
-		{
-			GD.PrintErr($"[HealthComponent] Parent must implement IDamageable!");
-		}
 	}
 
 	public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
@@ -30,7 +24,7 @@ public partial class HealthComponent : Node
 
 		_currentHealth = Mathf.Max(0, _currentHealth - amount);
 
-		// Emit signal for UI, effects, etc.
+
 		EmitSignal(SignalName.HealthChanged, _currentHealth, MaxHealth);
 
 		// Apply knockback if entity has Velocity
@@ -64,8 +58,6 @@ public partial class HealthComponent : Node
 	{
 		EmitSignal(SignalName.Died);
 
-		if (_owner != null)
-			_owner.Die();
 	}
 
 	private void PlayHitEffect()

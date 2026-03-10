@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class PlayerController : CharacterBody3D, IEntity, IStamina, IDamageable
+public partial class PlayerController : CharacterBody3D, IEntity
 {
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
@@ -30,24 +30,10 @@ public partial class PlayerController : CharacterBody3D, IEntity, IStamina, IDam
 	public bool CanJump => IsTouchingFloor || _coyoteTimer.IsActive;
 	public Node AsNode() => this;
 
-
-
 	public float CurrentStamina => _staminaComponent?.CurrentStamina ?? 0;
 	public float MaxStamina => _staminaComponent?.MaxStamina ?? 100;
 
 	public bool CanConsume(float cost) => _staminaComponent?.CanConsume(cost) ?? true;
-	public void Regenerate(float amount) => _staminaComponent?.Regenerate(amount);
-
-	public float CurrentHealth => _health?.CurrentHealth ?? 0;
-	public float MaxHealth => _health?.MaxHealth ?? 100;
-	public bool IsAlive => _health?.IsAlive ?? true;
-
-	public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
-	{
-		_health?.TakeDamage(amount, hitDirection, damageSource);
-	}
-
-	public void Heal(float amount) => _health?.Heal(amount);
 
 	public void Die()
 	{
@@ -107,8 +93,6 @@ public partial class PlayerController : CharacterBody3D, IEntity, IStamina, IDam
 
 		// 1. State logic (if needed)
 		_stateMachine._PhysicsProcess(delta);
-
-		_staminaComponent.Update((float)delta);
 
 		// 2. Apply gravity BEFORE move
 		if (!IsOnFloor())

@@ -19,12 +19,11 @@ public partial class StateMachine : Node
 			if (child is MovementState state)
 			{
 				state.Finished += OnStateFinished;
-				state.Initialize(entity);
+				state.Initialize(entity, staminaComponent);
 			}
 		}
 
 		CurrentState = InitialState ?? GetChild(0) as MovementState;
-		_currentMovementMode = CurrentState.MovementMode;
 		CurrentState.Enter();
 		
 	}
@@ -46,7 +45,6 @@ public partial class StateMachine : Node
 
 		CurrentState?.Exit();
 		CurrentState = nextState;
-		_currentMovementMode = CurrentState.MovementMode;
 		CurrentState.Enter();
 	}
 

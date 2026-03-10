@@ -5,7 +5,7 @@ public partial class StaminaComponent : Node
 {
 
 	[Signal] public delegate void StaminaConsumedEventHandler(float consumedStamina);
-    [Signal] public delegate void StaminaRegenedEventHandler(float consumedStamina);
+    [Signal] public delegate void StaminaChangedEventHandler(float consumedStamina, float maxStamina);
     
 	[Export] public float MaxStamina = 100f;
 
@@ -15,42 +15,25 @@ public partial class StaminaComponent : Node
 	{
 		CurrentStamina = MaxStamina;
 	}
-
-	public void Update(float delta)
-	{
-		//if (movementState == null)
-		//	return;
-
-		//if (movementState.StaminaConsumptionPerSecond > 0)
-		//{
-		//	Consume(movementState.StaminaConsumptionPerSecond * delta);
-		//}
-		//else
-		//{
-		//	Regenerate(movementState.StaminaRegenPerSecond * delta);
-		//}
-	}
-
     public bool CanConsume(float cost) => CurrentStamina >= cost;
 
-	public void Consume(float amount)
-	{
-		CurrentStamina = Mathf.Max(CurrentStamina - amount, 0);
-		EmitSignal(SignalName.StaminaConsumed, amount);
-	}
+    public bool TryConsume(float amount)
+    {
+        if (CurrentStamina < amount)
+            return false;
 
-	public void Regenerate(float amount)
-	{
-		CurrentStamina = Mathf.Min(CurrentStamina + amount, MaxStamina);
-	}
+        CurrentStamina -= amount;
 
-	public void RegenerateFull()
-	{
-		CurrentStamina = MaxStamina;
-	}
+        EmitSignal(SignalName.StaminaConsumed, amount);
+        EmitSignal(SignalName.StaminaChanged, CurrentStamina, MaxStamina);
 
-	public float Normalized()
-	{
-		return CurrentStamina / MaxStamina;
-	}
+        return true;
+    }
+
+    public void Regen(float regenPerSecond, float delta)
+    {
+        CurrentStamina = Mathf.Min(CurrentStamina + regenPerSecond * delta, MaxStamina);//thinkh about reden per se
+
+        EmitSignal(SignalName.StaminaChanged, CurrentStamina, MaxStamina);
+    }
 }

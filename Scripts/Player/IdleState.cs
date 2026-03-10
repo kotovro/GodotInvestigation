@@ -1,9 +1,9 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
 
 public partial class IdleState : MovementState
 {
-	public override MovementMode MovementMode => MovementMode.Walk;
 	public override float StaminaRegenPerSecond => 10f;
 	[Export] public float Speed { get; set; } = 0.0f;
 	public override void Enter()
@@ -20,8 +20,6 @@ public partial class IdleState : MovementState
 			GD.Print($"We jumped!", Entity.CanJump);
 			TransitionTo("JumpState");
 		}
-		var _entityAsStamina = (IStamina)Entity;
-        _entityAsStamina.Regenerate(StaminaRegenPerSecond);
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
 		if (inputDir != Vector2.Zero)
 		{
@@ -33,5 +31,6 @@ public partial class IdleState : MovementState
 			GD.Print($"We are running!", Entity.CanJump);
 			TransitionTo("RunState");
 		}
+		_staminaComponent.Regen(StaminaRegenPerSecond, (float)delta);
 	}
 }

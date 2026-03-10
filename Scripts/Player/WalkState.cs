@@ -2,8 +2,7 @@ using Godot;
 
 public partial class WalkState : MovementState
 {
-	public override MovementMode MovementMode => MovementMode.Walk;
-	public override float StaminaRegenPerSecond => 10f;
+	public override float StaminaRegenPerSecond => 1f;
 	[Export] public float Speed { get; set; } = 5.0f;
 
 	public override void Enter()
@@ -38,7 +37,7 @@ public partial class WalkState : MovementState
 			Entity.Velocity.Y,
 			moveDirection.Z * Speed
 		);
-
-		//Entity.SetLookDirection(moveDirection);
-	}
+        _staminaComponent.Regen(StaminaRegenPerSecond, (float)delta);
+        
+    }
 }
