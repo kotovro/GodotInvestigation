@@ -10,8 +10,8 @@ public partial class PlayerController : CharacterBody3D, IEntity
 
 
 	private MovementStateMachine _movementStateMachine;
-    private CombatStateMachine _combatStateMachine;
-    private HealthComponent _health;
+	private CombatStateMachine _combatStateMachine;
+	private HealthComponent _health;
 	private StaminaComponent _staminaComponent;
 	private CoyoteComponent _coyoteTimer;
 

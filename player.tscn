@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cjfot5ycow6nb"]
+[gd_scene load_steps=16 format=3 uid="uid://cjfot5ycow6nb"]
 
 [ext_resource type="Script" uid="uid://btftp7k2uq6eu" path="res://Scripts/Player/PlayerController.cs" id="1_dw050"]
 [ext_resource type="Script" uid="uid://bamumdqlx3qgg" path="res://Scripts/Player/MovementStateMachine.cs" id="1_hqtel"]
@@ -9,6 +9,9 @@
 [ext_resource type="Script" uid="uid://uwc5v2vxd6uq" path="res://Scripts/Player/CoyoteComponent.cs" id="6_2hs0m"]
 [ext_resource type="Script" uid="uid://4p0lspsdoh5u" path="res://Scripts/StaminaComponent.cs" id="7_1jxqw"]
 [ext_resource type="Script" uid="uid://ckoc0d6uvipxc" path="res://Scripts/Player/RunState.cs" id="8_dw050"]
+[ext_resource type="Script" uid="uid://bw45e6eqgmv2y" path="res://Scripts/Player/CombatStateMachine.cs" id="10_n7ghd"]
+[ext_resource type="Script" uid="uid://cunv0ircewb6" path="res://Scripts/Player/BasicAttackState.cs" id="11_ivps1"]
+[ext_resource type="Script" uid="uid://b42ka43i2fjf4" path="res://Scripts/Player/NotAttackingState.cs" id="12_urp6f"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_sh265"]
 size = Vector3(10, 0.5, 0.2)
@@ -35,11 +38,11 @@ transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 
 
 [node name="Camera3D" type="Camera3D" parent="Head"]
 
-[node name="StaminaComponent" type="Node" parent="." groups=["stamina_source"]]
-script = ExtResource("7_1jxqw")
-
 [node name="CoyoteComponent" type="Node" parent="."]
 script = ExtResource("6_2hs0m")
+
+[node name="StaminaComponent" type="Node" parent="." groups=["stamina_source"]]
+script = ExtResource("7_1jxqw")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("4_b26j0")
@@ -60,7 +63,12 @@ script = ExtResource("4_1jxqw")
 script = ExtResource("8_dw050")
 
 [node name="CombatStateMachine" type="Node" parent="."]
+script = ExtResource("10_n7ghd")
 
-[node name="Attack" type="Node" parent="CombatStateMachine"]
+[node name="BasicAttackState" type="Node" parent="CombatStateMachine"]
+script = ExtResource("11_ivps1")
+
+[node name="NotAttackingState" type="Node" parent="CombatStateMachine"]
+script = ExtResource("12_urp6f")
 
 [node name="ComboTImer" type="Timer" parent="."]

@@ -20,7 +20,6 @@ public partial class JumpState : MovementState
 		
 	}
 
-
 	public override void PhysicsUpdate(double delta)
 	{
 
