@@ -4,13 +4,32 @@ using System;
 public partial class GameStateController : Node
 {
 	[Export] public PackedScene EnemySpawnerScene;
-	private EnemySpawner _spawner;
+	[Export] public PackedScene PlayerSpawnerScene;
+	private EnemySpawner _enemySpawner;
+	private PlayerSpawner _playerSpawner;
+	private CanvasLayer _uiLayer;
+
 	public override void _Ready()
 	{
-		SpawnEnemySpawner();
+		AddPlayerSpawner();
+		AddEnemySpawner();
+	}
+	
+	private void AddPlayerSpawner()
+	{
+		if (PlayerSpawnerScene == null)
+		{
+			GD.PrintErr("Player spawner is not assigned in inspector!");
+			return;
+		}
+
+		_playerSpawner = PlayerSpawnerScene.Instantiate<PlayerSpawner>();
+		AddChild(_playerSpawner);
+		//_uiLayer.AddChild();
+		GD.Print("Yo, we added player spawner");
 	}
 
-	private void SpawnEnemySpawner()
+	private void AddEnemySpawner()
 	{
 		if (EnemySpawnerScene == null)
 		{
@@ -18,11 +37,10 @@ public partial class GameStateController : Node
 			return;
 		}
 
-		_spawner = EnemySpawnerScene.Instantiate<EnemySpawner>();
-
-		AddChild(_spawner);
+		_enemySpawner = EnemySpawnerScene.Instantiate<EnemySpawner>();
+		AddChild(_enemySpawner);
 	}
-
+	
 	public override void _Process(double delta)
 	{
 	}

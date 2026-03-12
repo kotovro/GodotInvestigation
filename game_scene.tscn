@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bdnk8rd6mfy6y" path="res://Scripts/GameStateController.cs" id="1_mixcd"]
 [ext_resource type="PackedScene" uid="uid://dm4r0uyj05qy" path="res://enemy_spawner.tscn" id="1_mj2jn"]
-[ext_resource type="PackedScene" uid="uid://cjfot5ycow6nb" path="res://player.tscn" id="1_mlf6e"]
 [ext_resource type="Script" uid="uid://bwslr08i3f05w" path="res://KillZone.cs" id="1_v1wow"]
+[ext_resource type="PackedScene" uid="uid://brns0ookk1gc1" path="res://player_spawner.tscn" id="3_mj2jn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_po0ka"]
 size = Vector3(1819.71, 1, 988.492)
@@ -19,6 +19,7 @@ size = Vector3(40, 1, 40)
 [node name="GameStateController" type="Node" parent="."]
 script = ExtResource("1_mixcd")
 EnemySpawnerScene = ExtResource("1_mj2jn")
+PlayerSpawnerScene = ExtResource("3_mj2jn")
 
 [node name="KillZone" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
@@ -36,23 +37,9 @@ mesh = SubResource("BoxMesh_ulns0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("BoxShape3D_dfy80")
 
-[node name="Player" parent="." groups=["player"] instance=ExtResource("1_mlf6e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97.0726, 108.248, -91.9402)
 
-[node name="StaminaBar" type="CanvasLayer" parent="."]
-
-[node name="StaminaContainer" type="Control" parent="StaminaBar"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="StaminaFill" type="TextureProgressBar" parent="StaminaBar/StaminaContainer"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [connection signal="body_entered" from="KillZone" to="KillZone" method="OnBodyEnered"]

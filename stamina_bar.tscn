@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://cejhbln13i3w0"]
+[gd_scene load_steps=4 format=3 uid="uid://cejhbln13i3w0"]
+
+[ext_resource type="Script" uid="uid://er1b5gvtdipc" path="res://Scripts/StaminaBar.cs" id="1_lq8vc"]
 
 [sub_resource type="SystemFont" id="SystemFont_qdpyq"]
 
@@ -11,6 +13,12 @@ default_font_size = 12
 [node name="StaminaContainer" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_right = 321.0
 offset_bottom = 40.0
 theme = SubResource("Theme_lq8vc")
+
+[node name="StaminaFIll" type="TextureProgressBar" parent="StaminaContainer"]
+layout_mode = 0
+offset_right = 247.0
+offset_bottom = 36.0
+script = ExtResource("1_lq8vc")
