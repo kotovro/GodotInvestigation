@@ -18,6 +18,7 @@ public partial class HealthComponent : Node
 		_currentHealth = MaxHealth;
 	}
 
+	///возможно добавить метод нанесения урона
 	public void TakeDamage(float amount, Vector3 hitDirection, Node damageSource)
 	{
 		if (!IsAlive) return;
