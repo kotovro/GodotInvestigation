@@ -5,20 +5,22 @@ public partial class PlayerController : CharacterBody3D, IEntity
 	[Signal] public delegate void LeftGroundEventHandler();
 	[Signal] public delegate void LandedEventHandler();
 
-	private bool _wasOnFloor;
 	[Export] public float Gravity { get; set; } = 25f;
+	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
 
-	private StateMachine _stateMachine;
-	private HealthComponent _health;
-	public StaminaComponent _staminaComponent;
+
+	private MovementStateMachine _movementStateMachine;
+    private CombatStateMachine _combatStateMachine;
+    private HealthComponent _health;
+	private StaminaComponent _staminaComponent;
 	private CoyoteComponent _coyoteTimer;
 
 
+	private bool _wasOnFloor;
 	private Node3D _Head;
 	private Camera3D _camera;
 
-	[Export] public NodePath CameraPath { get; set; } = new NodePath("Head/Camera3D");
-
+	
 	public new Vector3 Velocity
 	{
 		get => base.Velocity;
@@ -54,9 +56,9 @@ public partial class PlayerController : CharacterBody3D, IEntity
 		if (HasNode(CameraPath))
 			_camera = GetNode<Camera3D>(CameraPath);
 		_coyoteTimer = GetNode<CoyoteComponent>("CoyoteComponent");
-		_stateMachine = GetNode<StateMachine>("StateMachine");
+		_movementStateMachine = GetNode<MovementStateMachine>("MovementStateMachine");
+		_combatStateMachine = GetNode<CombatStateMachine>("CombatStateMachine");
 		_staminaComponent = GetNode<StaminaComponent>("StaminaComponent");
-
 	}
 
 	public Vector3 GetMovementDirection(Vector2 input)
@@ -92,7 +94,8 @@ public partial class PlayerController : CharacterBody3D, IEntity
 	{
 
 		// 1. State logic (if needed)
-		_stateMachine._PhysicsProcess(delta);
+		_movementStateMachine._PhysicsProcess(delta);
+		_combatStateMachine._PhysicsProcess(delta);
 
 		// 2. Apply gravity BEFORE move
 		if (!IsOnFloor())

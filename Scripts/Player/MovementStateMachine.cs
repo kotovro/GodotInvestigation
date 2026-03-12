@@ -1,11 +1,10 @@
 using Godot;
 using System;
 
-public partial class StateMachine : Node
+public partial class MovementStateMachine : Node
 {
 	[Export] public MovementState  InitialState { get; set; }
 
-	public MovementMode _currentMovementMode { get; private set;  }
 	public MovementState CurrentState;
 
 	public override void _Ready()

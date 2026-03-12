@@ -40,6 +40,4 @@ shape = SubResource("BoxShape3D_dfy80")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97.0726, 108.248, -91.9402)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
 [connection signal="body_entered" from="KillZone" to="KillZone" method="OnBodyEnered"]

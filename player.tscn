@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://cjfot5ycow6nb"]
 
 [ext_resource type="Script" uid="uid://btftp7k2uq6eu" path="res://Scripts/Player/PlayerController.cs" id="1_dw050"]
-[ext_resource type="Script" uid="uid://bamumdqlx3qgg" path="res://Scripts/Player/StateMachine.cs" id="1_hqtel"]
+[ext_resource type="Script" uid="uid://bamumdqlx3qgg" path="res://Scripts/Player/MovementStateMachine.cs" id="1_hqtel"]
 [ext_resource type="Script" uid="uid://cp8jfb62tovbb" path="res://Scripts/Player/IdleState.cs" id="2_sweqy"]
 [ext_resource type="Script" uid="uid://drf6tiqquh8fi" path="res://Scripts/Player/WalkState.cs" id="3_2hs0m"]
 [ext_resource type="Script" uid="uid://b632xci3wxgaa" path="res://Scripts/Player/JumpState.cs" id="4_1jxqw"]
@@ -44,17 +44,23 @@ script = ExtResource("6_2hs0m")
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("4_b26j0")
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="MovementStateMachine" type="Node" parent="."]
 script = ExtResource("1_hqtel")
 
-[node name="IdleState" type="Node" parent="StateMachine"]
+[node name="IdleState" type="Node" parent="MovementStateMachine"]
 script = ExtResource("2_sweqy")
 
-[node name="WalkState" type="Node" parent="StateMachine"]
+[node name="WalkState" type="Node" parent="MovementStateMachine"]
 script = ExtResource("3_2hs0m")
 
-[node name="JumpState" type="Node" parent="StateMachine"]
+[node name="JumpState" type="Node" parent="MovementStateMachine"]
 script = ExtResource("4_1jxqw")
 
-[node name="RunState" type="Node" parent="StateMachine"]
+[node name="RunState" type="Node" parent="MovementStateMachine"]
 script = ExtResource("8_dw050")
+
+[node name="CombatStateMachine" type="Node" parent="."]
+
+[node name="Attack" type="Node" parent="CombatStateMachine"]
+
+[node name="ComboTImer" type="Timer" parent="."]
